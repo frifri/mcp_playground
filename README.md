@@ -11,7 +11,8 @@ The Model Context Protocol (MCP) is an open protocol that enables AI assistants 
 ```
 mcp_playground/
 ├── server.py           # Main MCP server implementation
-├── requirements.txt    # Python dependencies
+├── pyproject.toml      # Project metadata and dependencies
+├── .python-version     # Python version specification (3.13)
 ├── .gitignore         # Git ignore rules
 └── README.md          # This file
 ```
@@ -20,29 +21,47 @@ mcp_playground/
 
 ### Prerequisites
 
-- Python 3.10 or higher
-- pip (Python package manager)
+- Python 3.13
+- [uv](https://github.com/astral-sh/uv) - Fast Python package installer and manager
+
+### Installing uv
+
+If you don't have uv installed yet:
+
+```bash
+# On macOS/Linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# On Windows
+powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
 
 ### Installation
 
 1. Clone this repository (if you haven't already)
 
-2. Create a virtual environment (recommended):
+2. Install dependencies using uv:
 ```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+uv sync
 ```
 
-3. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
+This will:
+- Automatically install Python 3.13 if needed
+- Create a virtual environment
+- Install all dependencies from `pyproject.toml`
 
 ## Running the Server
 
 To run the MCP server:
 
 ```bash
+uv run server.py
+```
+
+Or activate the virtual environment first:
+
+```bash
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 python server.py
 ```
 
@@ -105,8 +124,13 @@ To use this MCP server with Claude Code, you need to configure it in your MCP se
 {
   "mcpServers": {
     "example-server": {
-      "command": "python",
-      "args": ["/path/to/mcp_playground/server.py"]
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/path/to/mcp_playground",
+        "run",
+        "server.py"
+      ]
     }
   }
 }
@@ -186,7 +210,7 @@ You can test your MCP server using the MCP Inspector tool or by integrating it d
 ### "Module not found" errors
 Make sure you've installed the dependencies:
 ```bash
-pip install -r requirements.txt
+uv sync
 ```
 
 ### Server not appearing in Claude Code
@@ -199,11 +223,20 @@ pip install -r requirements.txt
 - Verify that the input schema matches what you're passing
 - Make sure all required parameters are provided
 
+## Why uv?
+
+[uv](https://github.com/astral-sh/uv) is a modern Python package manager that's:
+- 10-100x faster than pip
+- Automatically manages Python versions
+- Has built-in virtual environment support
+- Compatible with pip and pyproject.toml standards
+
 ## Resources
 
 - [MCP Documentation](https://modelcontextprotocol.io)
 - [MCP Python SDK](https://github.com/modelcontextprotocol/python-sdk)
 - [MCP Specification](https://spec.modelcontextprotocol.io)
+- [uv Documentation](https://github.com/astral-sh/uv)
 
 ## License
 

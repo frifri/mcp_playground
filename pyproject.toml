@@ -1,0 +1,19 @@
+[project]
+name = "mcp-playground"
+version = "0.1.0"
+description = "A Python MCP server example"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "mcp>=1.0.0",
+]
+
+[project.scripts]
+mcp-server = "server:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+dev-dependencies = []
